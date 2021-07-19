@@ -1,0 +1,20 @@
+
+<launch>
+  <node name="attitude_controller" pkg="vitarana_drone" type="attitude_controller.py" output="screen"/>
+  <node name="position_controller" pkg="vitarana_drone" type="position_controller.py" output="screen"/>
+
+<arg name="record" default="false"/>
+<arg name="duration" default="130"/>
+<arg name="rec_name" default="Task_2_VD.bag"/>
+
+
+<group if="$(arg record)">
+    <node name="throttler_gps" type="throttle" pkg="topic_tools" args="messages /edrone/gps 10"/>
+    
+    <node name="rosbag_record_position" pkg="rosbag" type="record"
+       args="record -O $(find vitarana_drone)/bag_files/$(arg rec_name) --duration=$(arg duration) /edrone/gps_throttle /gazebo/model_states_throttle" output="screen"/>
+
+</group>
+
+
+</launch>
